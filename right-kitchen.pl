@@ -1,13 +1,43 @@
 #!/usr/bin/perl
 
+=head1 NAME
+
+B<right-kitchen> - Filter I<Rightmove> listings by room size
+
+=head1 SYNOPSIS
+
+B<right-kitchen.pl> I<RSS location>
+
+=head1 DESCRIPTION
+
+Print a summary of properties advertised on L<http://www.rightmove.co.uk/>
+that includes the area and dimensions of the kitchen.
+
+This is a hack.
+
+=cut
+
 use strict;
 use warnings;
 use utf8;
 use open ':locale';
 
-use LWP::UserAgent;
+use Getopt::Long;
 use XML::LibXML;
-use Data::Dumper;
+
+sub pod2usage {
+    require Pod::Usage;
+    return Pod::Usage::pod2usage(@_);
+}
+
+my %opt;
+GetOptions(
+    'help|h' => \$opt{'help'},
+    'man' => \$opt{'man'},
+) or pod2usage( '-verbose' => 0 );
+pod2usage( '-verbose' => 1 ) if $opt{'help'};
+pod2usage( '-verbose' => 2 ) if $opt{'man'};
+pod2usage( '-verbose' => 0 ) unless @ARGV == 1;
 
 my $rss_url = shift;
 my $rss = XML::LibXML->load_xml(
@@ -44,3 +74,52 @@ foreach my $link_node (
         "\n\n"
     );
 }
+
+__END__
+
+=head1 OPTIONS
+
+=over 4
+
+=item I<RSS location>
+
+The URL or filename of a Rightmove search RSS feed.
+
+=item B<-h>, B<--help>
+
+Displays brief help.
+
+=item B<--man>
+
+Displays the full manual.
+
+=back
+
+=head1 AUTHOR
+
+Peter Oliver
+
+=head1 BUGS
+
+See L<https://github.com/mavit/right-kitchen/issues>.
+
+=head1 LICENCE
+
+Copyright 2013, Peter Oliver.
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+=head1 SEE ALSO
+
+L<https://github.com/mavit/right-kitchen>, L<http://www.rightmove.co.uk/>
