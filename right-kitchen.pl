@@ -40,9 +40,8 @@ pod2usage( '-verbose' => 2 ) if $opt{'man'};
 pod2usage( '-verbose' => 0 ) unless @ARGV == 1;
 
 my $rss_url = shift;
-my $rss = XML::LibXML->load_xml(
-    'location' => $rss_url,
-);
+my $parser = XML::LibXML->new();
+my $rss = $parser->parse_file($rss_url);
 
 foreach my $link_node (
     $rss->findnodes('//item[category[text() != "Rightmove Search"]]/link')
