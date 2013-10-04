@@ -47,10 +47,11 @@ foreach my $link_node (
     $rss->findnodes('//item[category[text() != "Rightmove Search"]]/link')
 ) {
     my @report = ();
-    my $html = XML::LibXML->load_html(
-        'location' => $link_node->textContent,
-        'recover' => 1,
-        'encoding' => 'Windows-1252',	# FIXME: override only ISO-8859-1.
+    my $html = $parser->parse_html_file(
+        $link_node->textContent, {
+            'recover' => 1,
+            'encoding' => 'Windows-1252',    # FIXME: override only ISO-8859-1.
+        }
     );
 
     foreach my $detail (
